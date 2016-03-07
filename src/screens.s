@@ -722,6 +722,7 @@ BillyMessageEnd:
   dec 15
   bne :-
 
+NoNotSure:
   jsr wait_vblank
   lda #0
   sta PPUMASK
@@ -752,6 +753,30 @@ BillyMessageEnd:
 Retry:
   jmp NewLevel
 Quit:
+
+  jsr wait_vblank
+  lda #0
+  sta PPUMASK
+  PositionPrintXY 0, 8,13,  "Are you sure?"
+  PositionPrintXY 0, 8,14,  "      "
+  lda #0
+  sta PPUSCROLL
+  sta PPUSCROLL
+  jsr wait_vblank
+  lda #BG_ON|OBJ_ON
+  sta PPUMASK
+
+: jsr WaitForKey
+  lda keydown
+  and #KEY_A
+  bne ReallyQuit
+
+  lda keydown
+  and #KEY_B
+  jne NoNotSure
+  beq :-
+
+ReallyQuit:
   lda EditMode
   jne StartEditorNormal
   jmp StartMainMenu

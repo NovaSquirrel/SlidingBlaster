@@ -9,7 +9,8 @@
   sta 3
 :
   lda JOY1,x
-  lsr a
+  and #3
+  cmp #1
   rol 1
   bcc :-
   lda mousedown,x
@@ -20,12 +21,14 @@
   sta mousedown,x
 :
   lda JOY1,x
-  lsr a
+  and #3
+  cmp #1
   rol 2
   bcc :-
 :
   lda JOY1,x
-  lsr a
+  and #3
+  cmp #1
   rol 3
   bcc :-
   rts
@@ -63,7 +66,7 @@ crosshairYHi  = CursorPYH
 loop:
   jsr ReadMouse
   lda 1
-  and #$0F
+  and #$0F ; Check the signature
   cmp #1
   bne notMouse
   lda 2
